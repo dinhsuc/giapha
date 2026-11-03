@@ -75,7 +75,7 @@ h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 <input id="cq" type="search" placeholder="Gõ tên để tìm…" autocomplete="off">
 <div id="cl"></div>
 <div class="cr"><div><label>Vẽ đến đời</label><select id="cg"></select></div>
-<div><label>Khổ giấy</label><select id="cs"><option>A4 landscape</option><option>A4 portrait</option><option>A3 landscape</option><option>A3 portrait</option></select></div></div>
+<div><label>Khổ giấy</label><select id="cs"><option>A4 landscape</option><option>A4 portrait</option><option>A3 landscape</option><option>A3 portrait</option><option>A2 landscape</option><option>A2 portrait</option><option>A1 landscape</option><option>A1 portrait</option><option>A0 landscape</option><option>A0 portrait</option></select></div></div>
 <div id="ch"></div>
 <div class="cr"><button class="btn" id="cx">Đóng</button><button class="btn main" id="cpdf">Xuất PDF</button></div>
 <div id="cv"></div>
@@ -887,7 +887,7 @@ upd();
 const m=location.hash.match(/^#p(\d+)$/);if(m&&N[+m[1]])setTimeout(()=>locate(+m[1]),50);
 
 const COL=185,BW=165,LH=14;
-const PAPER={'A4 landscape':[277,186],'A4 portrait':[190,273],'A3 landscape':[400,273],'A3 portrait':[277,396]};
+const PAPER={'A4 landscape':[277,186],'A4 portrait':[190,273],'A3 landscape':[400,273],'A3 portrait':[277,396],'A2 landscape':[574,396],'A2 portrait':[400,570],'A1 landscape':[821,570],'A1 portrait':[574,817],'A0 landscape':[1169,817],'A0 portrait':[821,1165]};
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const vis=(i,G)=>N[i].k.filter(k=>N[k].g<=G);
 function maxSub(r){let m=N[r].g;const st=[r];while(st.length){const i=st.pop();m=Math.max(m,N[i].g);N[i].k.forEach(k=>st.push(k))}return m}
@@ -947,7 +947,7 @@ $('cq').oninput=e=>{const t=fold(e.target.value.trim()),l=$('cl');l.innerHTML=''
     const b=h('button','btn',N[i].num+' '+INFO[i].nm+(N[i].p>=0?' · cha: '+INFO[N[i].p].nm:''));
     b.style.cssText='display:block;width:100%;text-align:left;margin:4px 0';
     b.onclick=()=>{cr=i;l.innerHTML='';$('cq').value='';fillGen();draw()};l.append(b)}};
-$('cpdf').onclick=()=>{const p=$('cs').value,a=p.split(' ');$('pg').textContent='@page{size:'+a[0]+' '+a[1]+';margin:10mm}';$('pa').innerHTML=slices(cc,ctitle,p).join('');setTimeout(()=>window.print(),150)};
+$('cpdf').onclick=()=>{const p=$('cs').value,a=p.split(' ');const D={A4:[210,297],A3:[297,420],A2:[420,594],A1:[594,841],A0:[841,1189]};let [w,hh]=D[a[0]];if(a[1]==='landscape')[w,hh]=[hh,w];$('pg').textContent='@page{size:'+w+'mm '+hh+'mm;margin:10mm}';$('pa').innerHTML=slices(cc,ctitle,p).join('');setTimeout(()=>window.print(),150)};
 addEventListener('afterprint',()=>{$('pa').innerHTML=''});
 </script>
 </body>
