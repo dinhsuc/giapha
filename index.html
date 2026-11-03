@@ -33,7 +33,7 @@ h1{margin:0 0 10px;font-size:19px;line-height:1.25;font-weight:700;text-align:ce
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tn>.row{background:hsl(var(--h) 32% 22%);border-color:hsl(var(--h) 28% 38%)}}
 :root[data-theme="dark"] .tn>.row{background:hsl(var(--h) 32% 22%);border-color:hsl(var(--h) 28% 38%)}
 .tn>.row:active{filter:brightness(.93)}
-.kids.in{margin-left:15px;padding-left:5px;border-left:1px dashed var(--guide)}
+.kids.in{margin-left:var(--step,15px);padding-left:5px;border-left:1px dashed var(--guide)}
 .sp{display:block;font-style:italic;color:var(--muted);font-size:15px;margin-top:2px}
 .tg{display:inline-block;background:var(--soft);color:var(--muted);border-radius:8px;padding:0 7px;margin-left:6px;font-size:12px;vertical-align:middle}
 .node.open>.kids{display:block}
@@ -873,8 +873,17 @@ q.addEventListener('input',e=>search(e.target.value));
 $('ex').onclick=()=>N.forEach(n=>{if(n.k.length)setOpen(n.i,true)});
 $('co').onclick=collapse;
 const ZS=[.35,.5,.65,.8,1,1.25,1.5];let zl=4;
-function setZ(d){zl=Math.max(0,Math.min(ZS.length-1,zl+d));tree.style.zoom=ZS[zl]}
+function setZ(d){zl=Math.max(0,Math.min(ZS.length-1,zl+d));tree.style.zoom=ZS[zl];upd()}
 $('zo').onclick=()=>setZ(-1);$('zi').onclick=()=>setZ(1);
+const vv=window.visualViewport,wrapEl=document.querySelector('.wrap');let raf=0;
+function upd(){
+  const sc=(vv?vv.scale:1)*ZS[zl];
+  document.documentElement.style.setProperty('--step',(sc<1?Math.min(150,15*Math.pow(sc,-1.5)):15)+'px');
+  if(vv&&vv.scale<0.98){const w=Math.round(vv.width-24)+'px';wrapEl.style.width=w;wrapEl.style.maxWidth=w}
+  else{wrapEl.style.width='';wrapEl.style.maxWidth=''}
+}
+if(vv)vv.addEventListener('resize',()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(upd)});
+upd();
 const m=location.hash.match(/^#p(\d+)$/);if(m&&N[+m[1]])setTimeout(()=>locate(+m[1]),50);
 
 const COL=185,BW=165,LH=14;
