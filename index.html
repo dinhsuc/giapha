@@ -41,6 +41,20 @@ h1{margin:0 0 10px;font-size:19px;line-height:1.25;font-weight:700;text-align:ce
 .flash>.row{background:var(--soft);outline:2px solid var(--accent);outline-offset:-2px}
 h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 .res{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+
+.btn.main{background:var(--accent);color:var(--onacc);border-color:var(--accent)}
+#cp{display:none;position:fixed;inset:0;z-index:20;background:var(--bg);overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 30px}
+#cp.on{display:block}
+.cpi{max-width:900px;margin:0 auto}
+.cpi h2{font-size:19px;color:var(--accent);margin:4px 0 10px}
+.cpi label{display:block;font-size:14px;color:var(--muted);margin:8px 0 4px}
+.cpi input,.cpi select{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);font:inherit;font-size:16px}
+.cr{display:flex;gap:8px}.cr>*{flex:1}
+#cn{margin:8px 0;font-weight:700}
+#ch{font-size:14px;color:var(--muted);margin:8px 0}
+#cv{margin-top:10px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;max-height:70vh}
+#pa{display:none}
+@media print{body>*:not(#pa){display:none!important}body::before{display:none}body{background:#fff}#pa{display:block;-webkit-print-color-adjust:exact;print-color-adjust:exact}.slice{break-after:page;page-break-after:always}.slice:last-child{break-after:auto;page-break-after:auto}.slice svg{width:100%;height:auto;display:block}}
 </style>
 </head>
 <body>
@@ -49,10 +63,24 @@ h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 <input id="q" type="search" placeholder="Tìm tên (gõ có dấu hoặc không dấu)" autocomplete="off">
 </header>
 <div class="wrap">
-<div class="bar"><button class="btn" id="ex">Mở hết</button><button class="btn" id="co">Thu gọn</button></div>
+<div class="bar"><button class="btn" id="ex">Mở hết</button><button class="btn" id="co">Thu gọn</button><button class="btn" id="dr">Vẽ sơ đồ</button></div>
 <div id="tree" class="tree"></div>
 <div id="res"></div>
 </div>
+<div id="cp"><div class="cpi">
+<h2>Vẽ sơ đồ cây gia phả</h2>
+<div id="cn"></div>
+<label>Đổi người gốc (gõ tên, chỉ chọn người có con)</label>
+<input id="cq" type="search" placeholder="Gõ tên để tìm…" autocomplete="off">
+<div id="cl"></div>
+<div class="cr"><div><label>Vẽ đến đời</label><select id="cg"></select></div>
+<div><label>Khổ giấy</label><select id="cs"><option>A4 landscape</option><option>A4 portrait</option><option>A3 landscape</option><option>A3 portrait</option></select></div></div>
+<div id="ch"></div>
+<div class="cr"><button class="btn" id="cx">Đóng</button><button class="btn main" id="cpdf">Xuất PDF</button></div>
+<div id="cv"></div>
+</div></div>
+<div id="pa"></div>
+<style id="pg"></style>
 <script>
 const DATA=`1.1. Thủy Tổ - Trần Văn Huy
 2.1. Đặng Lâm
@@ -845,6 +873,70 @@ q.addEventListener('input',e=>search(e.target.value));
 $('ex').onclick=()=>N.forEach(n=>{if(n.k.length)setOpen(n.i,true)});
 $('co').onclick=collapse;
 const m=location.hash.match(/^#p(\d+)$/);if(m&&N[+m[1]])setTimeout(()=>locate(+m[1]),50);
+
+const COL=185,BW=165,LH=14;
+const PAPER={'A4 landscape':[277,186],'A4 portrait':[190,273],'A3 landscape':[400,273],'A3 portrait':[277,396]};
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const vis=(i,G)=>N[i].k.filter(k=>N[k].g<=G);
+function maxSub(r){let m=N[r].g;const st=[r];while(st.length){const i=st.pop();m=Math.max(m,N[i].g);N[i].k.forEach(k=>st.push(k))}return m}
+function wrap(t,m){const L=[];let c='';for(const x of t.split(' ')){if(c&&(c+' '+x).length>m){L.push(c);c=x}else c=c?c+' '+x:x}if(c)L.push(c);return L}
+function lines(i){const f=INFO[i];const nm=f.nm+(f.tags.length?' ('+f.tags.join(', ')+')':'');
+  const a=wrap(nm,20).slice(0,3).map(t=>({t,s:'n'}));
+  f.sp.forEach(x=>wrap(x.l+': '+x.n,22).slice(0,2).forEach(t=>a.push({t,s:'s'})));
+  return a.slice(0,4)}
+function chart(r,G){
+  const nodes=[],pos={};let leaf=0;
+  (function go(i){const ks=vis(i,G);nodes.push(i);if(!ks.length){pos[i]=leaf++;return}ks.forEach(go);pos[i]=(pos[ks[0]]+pos[ks[ks.length-1]])/2})(r);
+  const g0=N[r].g,H=nodes.map(i=>lines(i).length*LH+10),unit=Math.max(44,Math.max(...H)+10);
+  const W=(G-g0)*COL+BW+20,cx=i=>10+(N[i].g-g0)*COL,cy=i=>pos[i]*unit+unit/2;
+  let lk='',bx='';
+  nodes.forEach((i,idx)=>{
+    const ks=vis(i,G),n=N[i];
+    if(ks.length){const x1=cx(i)+BW,xm=x1+(COL-BW)/2,ys=ks.map(cy);
+      lk+=`M${x1} ${cy(i)}H${xm}M${xm} ${Math.min(...ys)}V${Math.max(...ys)}`+ks.map(k=>`M${xm} ${cy(k)}H${cx(k)}`).join('')}
+    const h=H[idx],y=cy(i)-h/2,hue=35+(n.g-10)*22;
+    const fill=n.g>9?`hsl(${hue},50%,90%)`:'#fffdf8',st=n.g>9?`hsl(${hue},38%,62%)`:'#b89a6a';
+    bx+=`<rect x="${cx(i)}" y="${y}" width="${BW}" height="${h}" rx="6" fill="${fill}" stroke="${st}"/>`;
+    lines(i).forEach((l,j)=>{bx+=`<text x="${cx(i)+7}" y="${y+2+LH*(j+1)}" font-size="${l.s==='n'?11:10.5}" `+(l.s==='n'?'font-weight="700"':'font-style="italic" fill="#6b5a46"')+`>${esc(l.t)}</text>`});
+  });
+  return {W,unit,leaf,g0,G,count:nodes.length,ctr:nodes.map(cy),hs:H,
+    body:`<path d="${lk}" stroke="#a88a5c" fill="none" stroke-width="1.2"/><g fill="#2a2018">${bx}</g>`};
+}
+function hdr(c,y){let s='';for(let g=c.g0;g<=c.G;g++)s+=`<text x="${10+(g-c.g0)*COL}" y="${y}" font-size="12" font-weight="700" fill="#8c2f1b">Đời ${g}</text>`;return s}
+function full(c,t){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${c.W} ${c.leaf*c.unit+60}" width="${c.W}" font-family="Georgia,serif"><text x="10" y="22" font-size="16" font-weight="700" fill="#8c2f1b">${esc(t)}</text>${hdr(c,48)}<svg x="0" y="60" width="${c.W}" height="${c.leaf*c.unit}" viewBox="0 0 ${c.W} ${c.leaf*c.unit}">${c.body}</svg></svg>`}
+function breaks(c,paper){
+  const [pw,ph]=PAPER[paper],W=Math.max(c.W,700),Hh=W*ph/pw,rpp=Math.max(1,Math.floor((Hh-60)/c.unit));
+  const st=y=>c.ctr.some((v,i)=>v-c.hs[i]/2<y-.01&&v+c.hs[i]/2>y+.01);
+  const out=[];let s=0;
+  while(s<c.leaf){let e=Math.min(s+rpp,c.leaf);while(e>s+1&&e<c.leaf&&st(e*c.unit))e--;out.push([s,e]);s=e}
+  return {out,W,Hh};
+}
+function slices(c,t,paper){
+  const {out,W,Hh}=breaks(c,paper);
+  return out.map(([s,e],k)=>{const hh=(e-s)*c.unit;
+    return `<div class="slice"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${Hh}" font-family="Georgia,serif"><text x="10" y="22" font-size="16" font-weight="700" fill="#8c2f1b">${esc(t)}${out.length>1?' — trang '+(k+1)+'/'+out.length:''}</text>${hdr(c,48)}<svg x="0" y="60" width="${W}" height="${hh}" viewBox="0 ${s*c.unit} ${W} ${hh}">${c.body}</svg></svg></div>`});
+}
+let cr=N.findIndex(n=>INFO[n.i].tags.includes('Tổ Chi Bính'));if(cr<0)cr=0;
+let cc=null,ctitle='';
+function fillGen(){const mx=maxSub(cr),s=$('cg');s.innerHTML='';for(let g=N[cr].g;g<=mx;g++){const o=h('option',null,'Đời '+g);o.value=g;s.append(o)}s.value=Math.min(N[cr].g+4,mx)}
+function draw(){
+  const G=+$('cg').value;cc=chart(cr,G);
+  ctitle='Gia phả Đặng tộc - chi Bính tam · từ '+INFO[cr].nm+' (đời '+N[cr].g+') đến đời '+G;
+  $('cn').textContent='Đang vẽ từ: '+N[cr].num+' '+INFO[cr].nm;
+  $('cv').innerHTML=full(cc,ctitle);
+  const p=$('cs').value,{out,W}=breaks(cc,p),pt=11*(PAPER[p][0]/W)*2.835;
+  $('ch').textContent=cc.count+' người · '+out.length+' trang · cỡ chữ in ≈ '+pt.toFixed(1)+' pt'+(pt<6?' (chữ nhỏ, nên vẽ ít đời hơn hoặc chọn giấy lớn hơn)':'');
+}
+$('dr').onclick=()=>{$('cp').classList.add('on');if(!$('cg').options.length)fillGen();draw()};
+$('cx').onclick=()=>$('cp').classList.remove('on');
+$('cg').onchange=draw;$('cs').onchange=draw;
+$('cq').oninput=e=>{const t=fold(e.target.value.trim()),l=$('cl');l.innerHTML='';if(t.length<2)return;let k=0;
+  for(let i=0;i<N.length&&k<8;i++)if(IDX[i].includes(t)&&N[i].k.length){k++;
+    const b=h('button','btn',N[i].num+' '+INFO[i].nm+(N[i].p>=0?' · cha: '+INFO[N[i].p].nm:''));
+    b.style.cssText='display:block;width:100%;text-align:left;margin:4px 0';
+    b.onclick=()=>{cr=i;l.innerHTML='';$('cq').value='';fillGen();draw()};l.append(b)}};
+$('cpdf').onclick=()=>{const p=$('cs').value,a=p.split(' ');$('pg').textContent='@page{size:'+a[0]+' '+a[1]+';margin:10mm}';$('pa').innerHTML=slices(cc,ctitle,p).join('');setTimeout(()=>window.print(),150)};
+addEventListener('afterprint',()=>{$('pa').innerHTML=''});
 </script>
 </body>
 </html>
