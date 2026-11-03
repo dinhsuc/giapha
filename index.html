@@ -3,49 +3,56 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Gia phả họ Đặng</title>
+<title>Gia phả Đặng tộc - chi Bính tam</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#faf6ef;--fg:#2b2118;--muted:#7a6a58;--line:#d9c9b0;--accent:#8c2f1b;--hit:#fde9a8;--card:#fff}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1713;--fg:#efe5d6;--muted:#a89880;--line:#4a3d30;--accent:#e08a6f;--hit:#5a4713;--card:#26201a}}
-:root[data-theme="dark"]{--bg:#1c1713;--fg:#efe5d6;--muted:#a89880;--line:#4a3d30;--accent:#e08a6f;--hit:#5a4713;--card:#26201a}
+--bg:#f7f1e6;--card:#fffdf8;--fg:#2a2018;--muted:#7d6b58;--line:#e2d4bc;--accent:#8c2f1b;--soft:#f1e4cf;--onacc:#fff;--guide:#cdb48f;--tint:#a8814f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1612;--card:#251f19;--fg:#f1e7d8;--muted:#ab9a82;--line:#42362a;--accent:#e58f73;--soft:#33291f;--onacc:#1b1612;--guide:#6d5b46;--tint:#d9b98a}}
+:root[data-theme="dark"]{--bg:#1b1612;--card:#251f19;--fg:#f1e7d8;--muted:#ab9a82;--line:#42362a;--accent:#e58f73;--soft:#33291f;--onacc:#1b1612;--guide:#6d5b46;--tint:#d9b98a}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Georgia,"Times New Roman",serif}
-header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:12px 14px;border-bottom:1px solid var(--line);z-index:5}
-h1{margin:0 0 8px;font-size:20px;color:var(--accent)}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-input[type=search]{flex:1;min-width:140px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:inherit}
-button{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:inherit;cursor:pointer}
-#info{font-size:13px;color:var(--muted);margin-top:6px}
-main{padding:10px 8px 40px;max-width:900px;margin:0 auto;overflow-x:auto}
-details{margin-left:14px;border-left:1px dashed var(--line);padding-left:8px}
-summary{cursor:pointer;padding:3px 0;list-style:none}
-summary::-webkit-details-marker{display:none}
-summary::before{content:"▸ ";color:var(--accent)}
-details[open]>summary::before{content:"▾ "}
-.leaf{margin-left:14px;padding:3px 0 3px 8px;border-left:1px dashed var(--line)}
-.leaf::before{content:"• ";color:var(--muted)}
-.g{color:var(--accent);font-weight:bold}
-.n{font-size:12px;color:var(--muted);margin-left:6px}
-.hit>.lbl,.hit.leaf{background:var(--hit);border-radius:4px}
-.lbl{display:inline}
-#imp{display:none;margin:10px 0}
-#imp textarea{width:100%;height:140px;box-sizing:border-box;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px;font:13px monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.45 Georgia,"Times New Roman",serif;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--accent);z-index:11}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--accent);color:var(--onacc);padding:12px 14px 12px}
+h1{margin:0 0 10px;font-size:19px;line-height:1.25;font-weight:700;text-align:center}
+#q{width:100%;padding:11px 14px;border:0;border-radius:24px;font:inherit;font-size:16px;background:var(--card);color:var(--fg)}
+#q::placeholder{color:var(--muted)}
+.wrap{max-width:640px;margin:0 auto;padding:12px 12px 40px}
+.bar{display:flex;gap:8px;margin-bottom:10px}
+.btn{flex:1;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:12px;padding:10px 12px;font:inherit;font-size:15px;cursor:pointer;min-height:44px}
+.tree{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:flex;align-items:center;gap:8px;width:100%;min-height:48px;padding:8px 12px;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--fg);font:inherit;text-align:left;cursor:pointer}
+.row:active{background:var(--soft)}
+.mk{flex:none;width:14px;color:var(--accent);font-size:14px;text-align:center}
+.num{flex:none;color:var(--accent);font-weight:700;font-size:13px}
+.nm{flex:1;min-width:0;overflow-wrap:anywhere}
+.nm small{display:block;color:var(--muted);font-size:13px}
+.bd{flex:none;background:var(--soft);color:var(--muted);border-radius:10px;padding:1px 8px;font-size:13px}
+.kids{display:none}
+.tn>.row{background:hsl(var(--h) 50% 90%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tn>.row{background:hsl(var(--h) 32% 22%)}}
+:root[data-theme="dark"] .tn>.row{background:hsl(var(--h) 32% 22%)}
+.tn>.row:active{filter:brightness(.93)}
+.kids.in{margin-left:15px;border-left:1px dashed var(--guide)}
+.sp{display:block;font-style:italic;color:var(--muted);font-size:15px;margin-top:2px}
+.tg{display:inline-block;background:var(--soft);color:var(--muted);border-radius:8px;padding:0 7px;margin-left:6px;font-size:12px;vertical-align:middle}
+.node.open>.kids{display:block}
+.node.leaf>.row{cursor:default}
+.flash>.row{background:var(--soft);outline:2px solid var(--accent);outline-offset:-2px}
+h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
+.res{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 </style>
 </head>
 <body>
 <header>
-<h1>Gia phả họ Đặng</h1>
-<div class="row">
-<input id="q" type="search" placeholder="Tìm tên…">
-<button id="ex">Mở hết</button>
-<button id="co">Thu gọn</button>
-<button id="im">Nhập dữ liệu</button>
-</div>
-<div id="info"></div>
-<div id="imp"><textarea id="ta" placeholder="Dán toàn bộ gia phả (mỗi dòng dạng: 9.6. Đặng Thế Phượng)"></textarea><button id="go" style="margin-top:6px">Dựng cây</button></div>
+<h1>Gia phả Đặng tộc - chi Bính tam</h1>
+<input id="q" type="search" placeholder="Tìm tên (gõ có dấu hoặc không dấu)" autocomplete="off">
 </header>
-<main id="tree"></main>
+<div class="wrap">
+<div class="bar"><button class="btn" id="ex">Mở hết</button><button class="btn" id="co">Thu gọn</button></div>
+<div id="tree" class="tree"></div>
+<div id="res"></div>
+</div>
 <script>
 const DATA=`1.1. Thủy Tổ - Trần Văn Huy
 2.1. Đặng Lâm
@@ -754,62 +761,88 @@ const DATA=`1.1. Thủy Tổ - Trần Văn Huy
 16.5. Đặng Đình Tăng
 17.1. Đặng Đình Viễn
 10.3. Thụy Trung Hầu`;
-
-const $=id=>document.getElementById(id);
-function parse(t){
-  const root={kids:[],g:0},st=[root];let c=0;
-  for(const raw of t.split('\n')){
-    const l=raw.replace(/^[\s-]+/,'').trim();
-    const m=l.match(/^(\d+)\.\d+\.\s*(.+)$/);
-    if(!m)continue;
-    const g=+m[1],n={g,num:l.slice(0,l.indexOf(' ')),name:m[2],kids:[]};
-    while(st.length>1&&st[st.length-1].g>=g)st.pop();
-    st[st.length-1].kids.push(n);st.push(n);c++;
+const N=[];
+(function(){const st=[];
+for(const l of DATA.split('\n')){const m=l.match(/^(\d+)\.(\d+)\.\s*(.+)$/);if(!m)continue;
+const g=+m[1];while(st.length&&N[st[st.length-1]].g>=g)st.pop();
+const n={i:N.length,g,num:g+'.'+m[2],name:m[3],p:st.length?st[st.length-1]:-1,k:[],d:0};
+if(n.p>=0)N[n.p].k.push(n.i);N.push(n);st.push(n.i);}
+for(let i=N.length-1;i>=0;i--){const n=N[i];if(n.p>=0)N[n.p].d+=1+n.d;}
+})();
+function info(n){
+  const parts=n.name.split(' - ');let nm=parts[0],rest=parts.slice(1),tags=[],sp=[];
+  const pm=nm.match(/^(.*?)\s*\((.*?)\)$/);if(pm){nm=pm[1];tags.push(pm[2])}
+  if(nm==='Thủy Tổ'&&rest.length){tags.push('Thủy Tổ');nm=rest.shift()}
+  const female=/\sThị\s/.test(nm);
+  for(const r of rest){
+    if(/^(Bính|Tổ Chi)/.test(r)){tags.push(r);continue}
+    const m=r.match(/^(.*?)\s*\((Vợ \d+)\)$/);
+    sp.push(m?{l:m[2],n:m[1]}:{l:female?'Chồng':'Vợ',n:r});
   }
-  return {root,count:c};
+  return {nm,tags,sp};
 }
-function count(n){return n.kids.reduce((s,k)=>s+1+count(k),0)}
-function label(n){
-  const s=document.createElement('span');s.className='lbl';
-  const a=document.createElement('span');a.className='g';a.textContent=n.num+' ';
-  s.append(a,document.createTextNode(n.name));return s;
+const INFO=N.map(info);
+const short=n=>INFO[n.i].nm;
+const fold=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'d').toLowerCase();
+const IDX=N.map(n=>fold(n.name));
+const $=id=>document.getElementById(id),q=$('q'),tree=$('tree'),res=$('res');
+const FLAT=9;
+function h(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+const EL=[];
+function row(n){
+  const f=INFO[n.i],b=h('button','row');
+  b.append(h('span','mk',n.k.length?'▸':'·'),h('span','num',n.num));
+  const nm=h('span','nm',f.nm);
+  f.tags.forEach(t=>nm.append(h('span','tg',t)));
+  f.sp.forEach(x=>nm.append(h('span','sp',x.l+': '+x.n)));
+  b.append(nm);
+  if(n.k.length)b.append(h('span','bd',n.d));
+  return b;
 }
-function build(n){
-  if(!n.kids.length){const d=document.createElement('div');d.className='leaf';d.append(label(n));d._n=n;return d}
-  const d=document.createElement('details');const s=document.createElement('summary');
-  s.append(label(n));
-  const b=document.createElement('span');b.className='n';b.textContent='('+count(n)+' hậu duệ)';s.append(b);
-  d.append(s);n.kids.forEach(k=>d.append(build(k)));d._n=n;return d;
+function build(i){
+  const n=N[i],d=h('div','node'+(n.k.length?'':' leaf'));
+  EL[i]=d;if(n.g>FLAT){d.classList.add('tn');d.style.setProperty('--h',35+(n.g-FLAT-1)*22)}
+  const r=row(n);d.append(r);
+  if(n.k.length){
+    const k=h('div','kids'+(n.g>=FLAT?' in':''));n.k.forEach(c=>k.append(build(c)));d.append(k);
+    r.onclick=()=>setOpen(i,!d.classList.contains('open'));
+  }
+  return d;
 }
-let total=0;
-function render(text){
-  const {root,count:c}=parse(text);total=c;
-  const t=$('tree');t.innerHTML='';
-  root.kids.forEach(k=>t.append(build(k)));
-  t.querySelectorAll('details').forEach(d=>{if(d._n.g<=9)d.open=true});
-  $('info').textContent=c+' người · '+Math.max(0,...[...t.querySelectorAll('.g')].map(e=>parseInt(e.textContent)||0))+' đời';
+function setOpen(i,o){const d=EL[i];d.classList.toggle('open',o);d.firstChild.firstChild.textContent=o?'▾':'▸'}
+function openPath(i){for(let x=N[i].p;x>=0;x=N[x].p)setOpen(x,true)}
+function collapse(){N.forEach(n=>{if(n.k.length)setOpen(n.i,false)});
+  let x=0;while(N[x].k.length===1){setOpen(x,true);x=N[x].k[0]}setOpen(x,true)}
+tree.append(build(0));collapse();
+function locate(i){
+  q.value='';res.style.display='none';tree.style.display='';
+  openPath(i);
+  const e=EL[i];e.classList.add('flash');
+  e.scrollIntoView({block:'center'});
+  setTimeout(()=>e.classList.remove('flash'),2500);
+  history.replaceState(null,'','#p'+i);
 }
 function search(v){
-  const t=$('tree');v=v.trim().toLowerCase();
-  t.querySelectorAll('.hit').forEach(e=>e.classList.remove('hit'));
-  if(!v)return;
-  let first=null,k=0;
-  t.querySelectorAll('.leaf,summary').forEach(e=>{
-    if(e.textContent.toLowerCase().includes(v)){
-      (e.tagName==='SUMMARY'?e.parentElement:e).classList.add('hit');k++;
-      let p=e.parentElement;while(p&&p!==t){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement}
-      if(!first)first=e;
-    }
+  const t=fold(v.trim());
+  if(t.length<2){res.style.display='none';tree.style.display='';return}
+  tree.style.display='none';res.style.display='block';res.innerHTML='';
+  const hits=[];
+  for(let i=0;i<N.length&&hits.length<60;i++)if(IDX[i].includes(t))hits.push(i);
+  const box=h('div','tree');
+  hits.forEach(i=>{
+    const n=N[i],p=n.p>=0?N[n.p]:null,gp=p&&p.p>=0?N[p.p]:null;
+    const b=h('button','row');b.append(h('span','num','Đời '+n.g));
+    const nm=h('span','nm',short(n));
+    let ex=n.num;if(p)ex+=' · cha: '+short(p);if(gp)ex+=' · ông: '+short(gp);
+    nm.append(h('small',null,ex));b.append(nm);
+    b.onclick=()=>locate(i);box.append(b);
   });
-  $('info').textContent=k+' kết quả';
-  if(first)first.scrollIntoView({block:'center'});
+  res.append(h('h2',null,hits.length?(hits.length>=60?'60+ kết quả':hits.length+' kết quả'):'Không tìm thấy'),box);
 }
-$('q').addEventListener('input',e=>search(e.target.value));
-$('ex').onclick=()=>document.querySelectorAll('#tree details').forEach(d=>d.open=true);
-$('co').onclick=()=>document.querySelectorAll('#tree details').forEach(d=>d.open=false);
-$('im').onclick=()=>{const i=$('imp');i.style.display=i.style.display==='block'?'none':'block'};
-$('go').onclick=()=>{if($('ta').value.trim()){render($('ta').value);$('imp').style.display='none'}};
-render(DATA);
+q.addEventListener('input',e=>search(e.target.value));
+$('ex').onclick=()=>N.forEach(n=>{if(n.k.length)setOpen(n.i,true)});
+$('co').onclick=collapse;
+const m=location.hash.match(/^#p(\d+)$/);if(m&&N[+m[1]])setTimeout(()=>locate(+m[1]),50);
 </script>
 </body>
 </html>
