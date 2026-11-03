@@ -44,8 +44,8 @@ h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 
 .bar{flex-wrap:wrap}.bar .btn{padding:10px 4px;font-size:14px}.bar .zb{flex:none;width:44px;font-size:20px;line-height:1;padding:8px 0}
 .btn.main{background:var(--accent);color:var(--onacc);border-color:var(--accent)}
-#cp{display:none;position:fixed;inset:0;z-index:20;background:var(--bg);overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 30px}
-#cp.on{display:block}
+#cp,#sp{display:none;position:fixed;inset:0;z-index:20;background:var(--bg);overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 30px}
+#cp.on,#sp.on{display:block}
 .cpi{max-width:900px;margin:0 auto}
 .cpi h2{font-size:19px;color:var(--accent);margin:4px 0 10px}
 .cpi label{display:block;font-size:14px;color:var(--muted);margin:8px 0 4px}
@@ -56,6 +56,17 @@ h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 #cv{margin-top:10px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;max-height:70vh}
 #pa{display:none}
 @media print{body>*:not(#pa){display:none!important}body::before{display:none}body{background:#fff}#pa{display:block;-webkit-print-color-adjust:exact;print-color-adjust:exact}.slice{break-after:page;page-break-after:always}.slice:last-child{break-after:auto;page-break-after:auto}.slice svg{width:100%;height:auto;display:block}}
+
+.pk{font-weight:700;margin:6px 0;color:var(--accent)}
+.vd{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:14px 0}
+.vd p{margin:6px 0;font-size:18px;line-height:1.4}.vd .st{color:var(--muted);font-size:14px;margin-top:8px}
+.cg{display:grid;gap:16px 10px;margin-top:16px}
+.cl{position:relative;min-width:0}
+.cl::before{content:"";position:absolute;left:50%;top:-16px;height:16px;border-left:2px solid var(--guide)}
+.lcaw{display:flex;justify-content:center}.lcaw .cl{max-width:75%}.lcaw .cl::before{display:none}
+.cmpc{margin:0;width:100%;cursor:default;white-space:normal;align-items:flex-start}
+.cmpc .nm{white-space:normal}
+.endp{outline:2px solid var(--accent);outline-offset:-1px}
 </style>
 </head>
 <body>
@@ -64,7 +75,7 @@ h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 <input id="q" type="search" placeholder="Tìm tên (gõ có dấu hoặc không dấu)" autocomplete="off">
 </header>
 <div class="wrap">
-<div class="bar"><button class="btn" id="ex">Mở hết</button><button class="btn" id="co">Thu gọn</button><button class="btn" id="dr">Vẽ sơ đồ</button><button class="btn zb" id="zo" aria-label="Thu nhỏ">−</button><button class="btn zb" id="zi" aria-label="Phóng to">+</button></div>
+<div class="bar"><button class="btn" id="ex">Mở hết</button><button class="btn" id="co">Thu gọn</button><button class="btn" id="dr">Vẽ sơ đồ</button><button class="btn" id="sb">So sánh</button><button class="btn zb" id="zo" aria-label="Thu nhỏ">−</button><button class="btn zb" id="zi" aria-label="Phóng to">+</button></div>
 <div id="tree" class="tree"></div>
 <div id="res"></div>
 </div>
@@ -79,6 +90,13 @@ h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 <div id="ch"></div>
 <div class="cr"><button class="btn" id="cx">Đóng</button><button class="btn main" id="cpdf">Xuất PDF</button></div>
 <div id="cv"></div>
+</div></div>
+<div id="sp"><div class="cpi">
+<h2>So sánh quan hệ hai người</h2>
+<label>Người thứ nhất</label><input id="s1" type="search" placeholder="Gõ tên…" autocomplete="off"><div id="l1"></div><div id="p1" class="pk"></div>
+<label>Người thứ hai</label><input id="s2" type="search" placeholder="Gõ tên…" autocomplete="off"><div id="l2"></div><div id="p2" class="pk"></div>
+<div class="cr"><button class="btn" id="sx">Đóng</button><button class="btn" id="sw">Đổi chỗ hai người</button></div>
+<div id="so"></div>
 </div></div>
 <div id="pa"></div>
 <style id="pg"></style>
@@ -949,6 +967,80 @@ $('cq').oninput=e=>{const t=fold(e.target.value.trim()),l=$('cl');l.innerHTML=''
     b.onclick=()=>{cr=i;l.innerHTML='';$('cq').value='';fillGen();draw()};l.append(b)}};
 $('cpdf').onclick=()=>{const p=$('cs').value,a=p.split(' ');const D={A4:[210,297],A3:[297,420],A2:[420,594],A1:[594,841],A0:[841,1189]};let [w,hh]=D[a[0]];if(a[1]==='landscape')[w,hh]=[hh,w];$('pg').textContent='@page{size:'+w+'mm '+hh+'mm;margin:10mm}';$('pa').innerHTML=slices(cc,ctitle,p).join('');setTimeout(()=>window.print(),150)};
 addEventListener('afterprint',()=>{$('pa').innerHTML=''});
+
+const NM=i=>INFO[i].nm,FEM=i=>/\sThị\s/.test(INFO[i].nm);
+const anc=i=>{const a=[];for(let x=i;x>=0;x=N[x].p)a.unshift(x);return a};
+function role(x,y,dx,dy,cx,cy,lca){
+  const f=FEM(x),K=N[lca].k;
+  if(dx===dy){const el=K.indexOf(cx)<K.indexOf(cy);let b=el?(f?'chị':'anh'):'em';if(dx>=2)b+=' họ';return b}
+  if(dx<dy){
+    const d=dy-dx;
+    if(dx===0){const T=[0,f?'mẹ':'cha',f?'bà (nội)':'ông (nội)',f?'cụ bà':'cụ ông','kỵ'];return d<=4?T[d]:'tổ trên '+d+' đời'}
+    if(d>4)return 'bậc trên '+d+' đời';
+    const el=K.indexOf(cx)<K.indexOf(cy);
+    const P={1:['bác','chú','cô'],2:['ông bác','ông chú','bà cô'],3:['cụ bác','cụ chú','cụ cô'],4:['kỵ bác','kỵ chú','kỵ cô']}[d];
+    const r=el?(f&&d===2?'bà bác':P[0]):(f?P[2]:P[1]);
+    return dx>=2?r+' họ':r;
+  }
+  const d=dx-dy;
+  if(dy===0){const T=[0,'con','cháu nội','chắt','chút','chít'];return d<=5?T[d]:'hậu duệ đời thứ '+d}
+  return dy>=2?'cháu họ':'cháu';
+}
+function relInfo(a,b){
+  const pa=anc(a),pb=anc(b);let k=0;while(k<pa.length&&k<pb.length&&pa[k]===pb[k])k++;
+  const lca=pa[k-1],da=pa.length-k,db=pb.length-k,ca=da?pa[k]:-1,cb=db?pb[k]:-1;
+  return {pa,pb,k,lca,da,db,ca,cb,rAB:role(a,b,da,db,ca,cb,lca),rBA:role(b,a,db,da,cb,ca,lca)};
+}
+let sa=-1,sb=-1;
+function cell(i,end,tag,label){
+  const w=h('div','cl'+(N[i].g>9?' tn':''));if(N[i].g>9)w.style.setProperty('--h',35+(N[i].g-10)*22);
+  const r=h('div','row cmpc'+(end?' endp':''));
+  r.append(h('span','num',N[i].num));
+  const nm=h('span','nm',NM(i));nm.append(h('small',null,'Đời '+N[i].g+(label?' · '+label:'')));
+  r.append(nm);if(tag)r.append(h('span','bd',tag));
+  w.append(r);return w;
+}
+function cmp(){
+  $('p1').textContent=sa>=0?'① '+N[sa].num+' '+NM(sa)+' (đời '+N[sa].g+')':'';
+  $('p2').textContent=sb>=0?'② '+N[sb].num+' '+NM(sb)+' (đời '+N[sb].g+')':'';
+  const o=$('so');o.innerHTML='';
+  if(sa<0||sb<0)return;
+  if(sa===sb){o.append(h('div','empty','Hai ô đang chọn là cùng một người.'));return}
+  const R=relInfo(sa,sb),{lca,da,db,k}=R;
+  const v=h('div','vd');
+  const p1=h('p');p1.append(h('b',null,NM(sa)),document.createTextNode(' là '),h('b',null,R.rAB),document.createTextNode(' của '),h('b',null,NM(sb)),document.createTextNode('.'));
+  const p2=h('p');p2.append(h('b',null,NM(sb)),document.createTextNode(' là '),h('b',null,R.rBA),document.createTextNode(' của '),h('b',null,NM(sa)),document.createTextNode('.'));
+  v.append(p1,p2);
+  let st='Tổ chung gần nhất: '+N[lca].num+' '+NM(lca)+' (đời '+N[lca].g+')';
+  if(da===0)st='Ông '+NM(sa)+' chính là tổ của '+NM(sb);else if(db===0)st='Ông '+NM(sb)+' chính là tổ của '+NM(sa);
+  st+='. ① cách tổ chung '+da+' đời, ② cách '+db+' đời. ';
+  st+=da===db?'Ngang vai vế (cùng đời '+N[sa].g+').':NM(da<db?sa:sb)+' ở bậc trên '+NM(da<db?sb:sa)+' '+Math.abs(da-db)+' đời.';
+  v.append(h('div','st',st));
+  v.append(h('div','st','Xưng hô tính theo phả hệ nội tộc. Anh/em xác định theo thứ tự trong gia phả (số nhỏ là lớn tuổi hơn); giới tính suy từ tên (có “Thị” là nữ).'));
+  o.append(v);
+  const A=R.pa.slice(k),B=R.pb.slice(k),two=A.length&&B.length;
+  const lw=h('div','lcaw');lw.append(cell(lca,true,da===0?'①':db===0?'②':'',da===0||db===0?'':'tổ chung'));o.append(lw);
+  const g=h('div','cg');g.style.gridTemplateColumns=two?'minmax(0,1fr) minmax(0,1fr)':'minmax(0,420px)';g.style.justifyContent=two?'stretch':'center';
+  const K=N[lca].k,elA=two&&K.indexOf(R.ca)<K.indexOf(R.cb);
+  const n=Math.max(A.length,B.length);
+  const mk=(arr,tag,r,lab)=>r<arr.length?cell(arr[r],r===arr.length-1,r===arr.length-1?tag:'',r===0&&two?lab:''):h('div');
+  for(let r=0;r<n;r++){
+    if(A.length)g.append(mk(A,'①',r,elA?'nhánh anh':'nhánh em'));
+    if(B.length)g.append(mk(B,'②',r,elA?'nhánh em':'nhánh anh'));
+  }
+  o.append(g);
+}
+function pick(inp,list,which){
+  $(inp).oninput=e=>{const t=fold(e.target.value.trim()),l=$(list);l.innerHTML='';if(t.length<2)return;let c=0;
+    for(let i=0;i<N.length&&c<8;i++)if(IDX[i].includes(t)){c++;
+      const b=h('button','btn',N[i].num+' '+NM(i)+(N[i].p>=0?' · cha: '+NM(N[i].p):''));
+      b.style.cssText='display:block;width:100%;text-align:left;margin:4px 0';
+      b.onclick=()=>{if(which===1)sa=i;else sb=i;l.innerHTML='';$(inp).value='';cmp()};l.append(b)}};
+}
+pick('s1','l1',1);pick('s2','l2',2);
+$('sb').onclick=()=>$('sp').classList.add('on');
+$('sx').onclick=()=>$('sp').classList.remove('on');
+$('sw').onclick=()=>{[sa,sb]=[sb,sa];cmp()};
 </script>
 </body>
 </html>
