@@ -17,15 +17,15 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:va
 h1{margin:0 0 10px;font-size:19px;line-height:1.25;font-weight:700;text-align:center}
 #q{width:100%;padding:11px 14px;border:0;border-radius:24px;font:inherit;font-size:16px;background:var(--card);color:var(--fg)}
 #q::placeholder{color:var(--muted)}
-.wrap{max-width:640px;margin:0 auto;padding:12px 12px 40px}
+.wrap{max-width:960px;margin:0 auto;padding:12px 12px 40px}
 .bar{display:flex;gap:8px;margin-bottom:10px}
 .btn{flex:1;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:12px;padding:10px 12px;font:inherit;font-size:15px;cursor:pointer;min-height:44px}
-.tree{padding:1px 0}
-.row{display:flex;align-items:center;gap:6px;width:fit-content;max-width:100%;min-height:0;padding:2px 8px;line-height:1.3;border:1px solid var(--line);border-radius:8px;margin:9px 0;background:var(--card);color:var(--fg);font:inherit;text-align:left;cursor:pointer}
+.tree{padding:1px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.row{display:flex;align-items:center;gap:6px;width:fit-content;flex-shrink:0;min-height:0;padding:2px 8px;line-height:1.3;border:1px solid var(--line);border-radius:8px;margin:9px 0;background:var(--card);color:var(--fg);font:inherit;text-align:left;cursor:pointer}
 .row:active{background:var(--soft)}
 .mk{flex:none;width:10px;color:var(--accent);font-size:14px;text-align:center}
 .num{flex:none;color:var(--accent);font-weight:700;font-size:13px}
-.nm{flex:1;min-width:0;overflow-wrap:anywhere}
+.nm{flex:1;white-space:nowrap}
 .nm small{display:block;color:var(--muted);font-size:13px}
 .bd{flex:none;background:var(--soft);color:var(--muted);border-radius:8px;padding:0 6px;font-size:13px}
 .kids{display:none}
@@ -90,21 +90,11 @@ const DATA=`1.1. Thủy Tổ - Trần Văn Huy
 6.1. Đặng Huấn
 7.1. Đặng Tiến Vinh
 8.1. Đặng Thế Khanh - Tổ Chi Bính
+9.1. Đặng Thế Luận - Bính Nhất
+9.2. Đặng Thế Công - Bính Nhị
 9.3. Đặng Thế Lãng
 9.4. Đặng Thế Huân
 9.5. Đặng Thế Minh
-9.7. Đặng Thế Bính - Bính Tứ
-9.8. Đặng Thế Lộc - Bính Ngũ
-9.9. Đặng Đình Pháp - Bính Lục
-9.10. Đặng Đình Hiền
-9.11. Đặng Đình Khang
-9.12. Đặng Tiến Nho
-9.13. Đặng Tiến Thiện
-9.14. Đặng Tiến Tước
-9.15. Đặng Tiến Mỹ
-9.16. Đặng Tiến Kế - Bính Thất
-9.1. Đặng Thế Luận - Bính Nhất
-9.2. Đặng Thế Công - Bính Nhị
 9.6. Đặng Thế Phượng - Bính Tam - Lê Từ Hòa
 10.1. Đặng Đình Vượng
 11.1. Đặng Đình Hạo
@@ -307,7 +297,6 @@ const DATA=`1.1. Thủy Tổ - Trần Văn Huy
 15.3. Đặng Đình Phồn
 16.1. Đặng Đình Cập
 17.1. Đặng Đình Nãi
-18.1. Đặng Thị Đạc
 18.4. Đặng Đình Đóa - Lê Thị Mã
 19.1. Đặng Đình Trù - Nguyễn Thị Hoàn
 20.1. Đặng Thị Hạnh - Lê Thế Phóng
@@ -790,7 +779,17 @@ const DATA=`1.1. Thủy Tổ - Trần Văn Huy
 17.1. Đặng Đình Thôn
 16.5. Đặng Đình Tăng
 17.1. Đặng Đình Viễn
-10.3. Thụy Trung Hầu`;
+10.3. Thụy Trung Hầu
+9.7. Đặng Thế Bính - Bính Tứ
+9.8. Đặng Thế Lộc - Bính Ngũ
+9.9. Đặng Đình Pháp - Bính Lục
+9.10. Đặng Đình Hiền
+9.11. Đặng Đình Khang
+9.12. Đặng Tiến Nho
+9.13. Đặng Tiến Thiện
+9.14. Đặng Tiến Tước
+9.15. Đặng Tiến Mỹ
+9.16. Đặng Tiến Kế - Bính Thất`;
 const N=[];
 (function(){const st=[];
 for(const l of DATA.split('\n')){const m=l.match(/^(\d+)\.(\d+)\.\s*(.+)$/);if(!m)continue;
@@ -816,7 +815,7 @@ const short=n=>INFO[n.i].nm;
 const fold=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'d').toLowerCase();
 const IDX=N.map(n=>fold(n.name));
 const $=id=>document.getElementById(id),q=$('q'),tree=$('tree'),res=$('res');
-const FLAT=9;
+const FLAT=9,IND=7;
 function h(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
 const EL=[];
 function row(n){
@@ -834,7 +833,7 @@ function build(i){
   EL[i]=d;if(n.g>FLAT){d.classList.add('tn');d.style.setProperty('--h',35+(n.g-FLAT-1)*22)}
   const r=row(n);d.append(r);
   if(n.k.length){
-    const k=h('div','kids'+(n.g>=FLAT?' in':''));n.k.forEach(c=>k.append(build(c)));d.append(k);
+    const k=h('div','kids'+(n.g>=IND?' in':''));n.k.forEach(c=>k.append(build(c)));d.append(k);
     r.onclick=()=>setOpen(i,!d.classList.contains('open'));
   }
   return d;
