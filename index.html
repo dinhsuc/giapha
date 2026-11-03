@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.1, maximum-scale=5, user-scalable=yes, viewport-fit=cover">
 <title>Gia phả Đặng tộc - chi Bính tam</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
@@ -42,6 +42,7 @@ h1{margin:0 0 10px;font-size:19px;line-height:1.25;font-weight:700;text-align:ce
 h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 .res{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 
+.bar{flex-wrap:wrap}.bar .btn{padding:10px 4px;font-size:14px}.bar .zb{flex:none;width:44px;font-size:20px;line-height:1;padding:8px 0}
 .btn.main{background:var(--accent);color:var(--onacc);border-color:var(--accent)}
 #cp{display:none;position:fixed;inset:0;z-index:20;background:var(--bg);overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 30px}
 #cp.on{display:block}
@@ -63,7 +64,7 @@ h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 <input id="q" type="search" placeholder="Tìm tên (gõ có dấu hoặc không dấu)" autocomplete="off">
 </header>
 <div class="wrap">
-<div class="bar"><button class="btn" id="ex">Mở hết</button><button class="btn" id="co">Thu gọn</button><button class="btn" id="dr">Vẽ sơ đồ</button></div>
+<div class="bar"><button class="btn" id="ex">Mở hết</button><button class="btn" id="co">Thu gọn</button><button class="btn" id="dr">Vẽ sơ đồ</button><button class="btn zb" id="zo" aria-label="Thu nhỏ">−</button><button class="btn zb" id="zi" aria-label="Phóng to">+</button></div>
 <div id="tree" class="tree"></div>
 <div id="res"></div>
 </div>
@@ -871,6 +872,9 @@ function search(v){
 q.addEventListener('input',e=>search(e.target.value));
 $('ex').onclick=()=>N.forEach(n=>{if(n.k.length)setOpen(n.i,true)});
 $('co').onclick=collapse;
+const ZS=[.35,.5,.65,.8,1,1.25,1.5];let zl=4;
+function setZ(d){zl=Math.max(0,Math.min(ZS.length-1,zl+d));tree.style.zoom=ZS[zl]}
+$('zo').onclick=()=>setZ(-1);$('zi').onclick=()=>setZ(1);
 const m=location.hash.match(/^#p(\d+)$/);if(m&&N[+m[1]])setTimeout(()=>locate(+m[1]),50);
 
 const COL=185,BW=165,LH=14;
