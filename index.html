@@ -67,11 +67,14 @@ h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 .cmpc{margin:0;width:100%;cursor:default;white-space:normal;align-items:flex-start}
 .cmpc .nm{white-space:normal}
 .endp{outline:2px solid var(--accent);outline-offset:-1px}
+.tl{display:block;text-align:center;color:var(--onacc);font-size:14px;margin:-4px 0 9px;text-decoration:underline}
+#vc{text-align:center;color:var(--muted);font-size:13px;padding:4px 0 28px}
 </style>
 </head>
 <body>
 <header>
 <h1>Gia phả Đặng tộc - chi Bính tam</h1>
+<a class="tl" href="tien-su.html">Cội nguồn họ Trần: trước Thủy Tổ →</a>
 <input id="q" type="search" placeholder="Tìm tên (gõ có dấu hoặc không dấu)" autocomplete="off">
 </header>
 <div class="wrap">
@@ -79,6 +82,7 @@ h2{font-size:15px;color:var(--muted);margin:6px 4px 8px;font-weight:600}
 <div id="tree" class="tree"></div>
 <div id="res"></div>
 </div>
+<div id="vc"></div>
 <div id="cp"><div class="cpi">
 <h2>Vẽ sơ đồ cây gia phả</h2>
 <div id="cn"></div>
@@ -1041,6 +1045,17 @@ pick('s1','l1',1);pick('s2','l2',2);
 $('sb').onclick=()=>$('sp').classList.add('on');
 $('sx').onclick=()=>$('sp').classList.remove('on');
 $('sw').onclick=()=>{[sa,sb]=[sb,sa];cmp()};
+
+(function(){
+  const el=document.getElementById('vc'),base='https://api.counterapi.dev/v1/dinhsuc-giapha-binhtam/visits';
+  let inc=true;
+  try{const t=+localStorage.getItem('gp_visit');if(t&&Date.now()-t<30*60*1000)inc=false}catch(e){}
+  fetch(inc?base+'/up':base+'/').then(r=>r.json()).then(d=>{
+    const n=d.count!=null?d.count:d.value;if(n==null)return;
+    el.textContent='Lượt truy cập: '+Number(n).toLocaleString('vi-VN');
+    if(inc){try{localStorage.setItem('gp_visit',String(Date.now()))}catch(e){}}
+  }).catch(()=>{});
+})();
 </script>
 </body>
 </html>
